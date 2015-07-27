@@ -44,14 +44,15 @@ $rsItems = $el->GetTreeList($arFilter, $arSelect);
 
 while($arFields = $rsItems->Fetch())
 {
-   /*
+   /**/
     $pref = sprintf("\n%'. " . 2*($arFields["DEPTH_LEVEL"]-1) . "s", ""); 
     printf( $pref."%s(%d)[%s]", $arFields["NAME"] , $arFields["DEPTH_LEVEL"], $arFields["ACTIVE"]  );
-   */
+   /**/
+   /*
    if ($CatTree[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]]  != $arFields["ACTIVE"] ) {
       printf("Source[%s][%d]=%s / ",  $arFields["NAME"] , $arFields["DEPTH_LEVEL"], $CatTree[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]]  );
       printf("IB_%d[%s][%d]=%s\n",  $ib_id, $arFields["NAME"] , $arFields["DEPTH_LEVEL"], $arFields["ACTIVE"]  );
    }
- 
+   */
 }
 
