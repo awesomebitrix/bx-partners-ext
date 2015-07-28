@@ -21,8 +21,8 @@ $arSelect = Array("ID", "NAME",
                   "DEPTH_LEVEL", 
                   "ACTIVE", "GLOBAL_ACTIVE", "XML_ID" );
 
-$el = new CIBlockSection;
-$rsItems = $el->GetList($arSort, $arFilter, false, $arSelect);
+$bs = new CIBlockSection;
+$rsItems = $bs->GetList($arSort, $arFilter, false, $arSelect);
 
 while($arFields = $rsItems->GetNext())
 {
@@ -41,13 +41,16 @@ while($arFields = $rsItems->GetNext())
 
 /*******************************************************************/
 
-$ib_id = "15" ;
+$ib_id = "33" ;
 $arFilter = array(
     "IBLOCK_ID" => $ib_id,
 );
 
-$rsItems = $el->GetList($arSort, $arFilter, false, $arSelect);
+$rsItems = $bs->GetList($arSort, $arFilter, false); //, $arSelect);
+print_r($rsItems);
 
+
+print "---=== Ошибочно деактивирован у дилера ===---\n";
 while($arFields = $rsItems->GetNext())
 {
     // print_r($arFields);
@@ -61,13 +64,29 @@ while($arFields = $rsItems->GetNext())
          //$key = array("NAME"=>$arFields["NAME"], "DEPTH_LEVEL"=>$arFields["DEPTH_LEVEL"]);
          //$arCat[$key] = array("ID"=>$arFields["ID"], "ACTIVE"=>$arFields["ACTIVE"], "PATH"=>$arPath) ;
          $arCat[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]] = array("ID"=>$arFields["ID"], "ACTIVE"=>$arFields["ACTIVE"], "PATH"=>$arPath);
+         if ( $arFields["NAME"] == "Распродажа" ) continue;
+         if ( $arFields["NAME"] == "Программное обеспечение" ) continue;
+         $srcElem = $arSrc[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]];
+         if ($srcElem["ACTIVE"] == 'Y' && $arFields["ACTIVE"] == 'N' )
+         {
+             print $arPath ."/". $arFields["ID"] . "\n";
+/*
+             $arUpd["ACTIVE"] = 'Y' ;
+             $res = $bs->Update($arFields["ID"], $arUpd);
+             if ($res) {
+                print "UPDATED!\n";
+             } else {
+                print "ERROR:".$bs->LAST_ERROR. "\n";
+             }
+*/
+         }
        }
    }
 }
 
 // print_r($arCat);
 
-
+/*
 print "---=== Ошибочно деактивирован у дилера ===---\n";
 foreach ( array_keys($arCat) as $keyName ) {
     foreach ( array_keys($arCat[$keyName] ) as $keyDepth ) {
@@ -95,5 +114,5 @@ foreach ( array_keys($arCat) as $keyName ) {
 	}
     }
 }
-
+*/
 
