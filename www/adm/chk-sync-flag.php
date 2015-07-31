@@ -31,7 +31,7 @@ ob_flush();
 # get a list of catalogs
 $arFilterCat = Array(
     "TYPE"=>"ex_catalog",
-//    "ACTIVE" => "Y",
+    "ACTIVE" => "Y",
 );
 
 $ib = new CIBlock;
@@ -41,15 +41,14 @@ $rsIBs = $ib->GetList(Array("SORT"=>"ASC"), $arFilterCat);
 while($arFields = $rsIBs->Fetch())
 {
     // skip automatix
-    if ($ib_id == 107) continue;
+    if ($arFields["ID"] == 107 ) continue;
     // skip ark5
-    if ($ib_id == 472) continue;
+    if ($arFields["ID"] == 472 ) continue;
     // skip ark7
-    if ($ib_id == 510) continue;
-
+    if ($arFields["ID"] == 510 ) continue;
 
     // if ($arFields["ID"] !== "243" ) continue; // site 01 with this ID only
-    if ($arFields["ID"] != 5 ) continue; // site s1 with this ID only
+    // if ($arFields["ID"] != 15 ) continue; // site with this ID only
     print "Got catalog ID=".$arFields["ID"]."\n";
     ob_flush();
     // print_r($arFields);
@@ -77,7 +76,7 @@ while($arFields = $rsIBs->Fetch())
             $cnt_good++;
             // print "catalog_ID=".$arFields["ID"]." cnt=".$cnt_good. " ". $arItemFields["NAME"]. " - OK\n";
         } else {
-            // if ($arSrc[$loc_XML_ID]["PROPERTY_EX_SYNC_FLAG_VALUE"] == 'Y') {
+            if ($arSrc[$loc_XML_ID]["PROPERTY_EX_SYNC_FLAG_VALUE"] == 'Y') {
                 $cnt_bad++;
                 // print "catalog_ID=".$arFields["ID"]." Item #".$cnt_bad." with wrong EX_SYNC_FLAG={".$arItemFields["PROPERTY_EX_SYNC_FLAG_VALUE"]."}, Src_Flag={".$arSrc[$loc_XML_ID]["PROPERTY_EX_SYNC_FLAG_VALUE"]."} XML_ID=". $arItemFields["XML_ID"].", NAME=".$arItemFields["NAME"]."\n";
                 printf( "catalog_ID=%d Item#=%d Src_Flag/Active={%s/%s} EX_SYNC_FLAG/Active={%s/%s} , NAME=%s\n"
@@ -92,7 +91,7 @@ while($arFields = $rsIBs->Fetch())
                 /*** Update ***
                 $el->SetPropertyValues($arItemFields["ID"], $arFields["ID"], $arSrc[$loc_XML_ID]["PROPERTY_EX_SYNC_FLAG_VALUE"], "EX_SYNC_FLAG");
                 ***/
-            // }                
+            }                
         }    
         ob_flush();
     }
