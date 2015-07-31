@@ -36,7 +36,10 @@ while($arFields = $rsItems->GetNext())
           $arPath = $arPath . "->";
           // $arPath = $arPath . "[".  "]->";
        } else {
-         $arSrc[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]] = array("ID"=>$arFields["ID"], "ACTIVE"=>$arFields["ACTIVE"], "PATH"=>$arPath);
+         $arSrc[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]] = array("ID" => $arFields["ID"],
+								     "ACTIVE" => $arFields["ACTIVE"],
+                                                                     "PATH" => $arPath, 
+                                                                     "CNT" => $arFields["ELEMENT_CNT"] );
        }
     }
     print $arPath. ", ";
@@ -44,7 +47,6 @@ while($arFields = $rsItems->GetNext())
 }
 
 
-exit;
 /*******************************************************************/
 
 # get a list of catalogs
@@ -61,7 +63,6 @@ $bs = new CIBlockSection;
 /* list */
 while($arFieldsIB = $rsIBs->Fetch())
 {
-	print "Got catalog ID=".$arFieldsIB["ID"]. "/". $arFieldsIB["NAME"] ."\n";
         $ib_id =  $arFieldsIB["ID"];
 
         // skip automatix
@@ -70,6 +71,11 @@ while($arFieldsIB = $rsIBs->Fetch())
 	if ($ib_id == 472) continue;
         // skip ark7
 	if ($ib_id == 510) continue;
+
+        // DEBUG skip everything but 33
+	if ($ib_id != 33) continue;
+
+	print "Got catalog ID=".$ib_id. "/". $arFieldsIB["NAME"] ."\n";
 
 	$arFilter = array(
 		"IBLOCK_ID" => $ib_id,
@@ -97,16 +103,20 @@ while($arFieldsIB = $rsIBs->Fetch())
 		 $srcElem = $arSrc[$arFields["NAME"]][$arFields["DEPTH_LEVEL"]];
 		 if ($srcElem["ACTIVE"] == 'Y' && $arFields["ACTIVE"] == 'N' )
 		 {
-		     print "   Update=". $arPath. "/".  $arFields["ID"] . "\n";
-		     /*
-		     $arUpd["ACTIVE"] = 'Y' ;
-		     $res = $bs->Update($arFields["ID"], $arUpd);
-		     if ($res) {
-			print "UPDATED!\n";
-		     } else {
-			print "ERROR:".$bs->LAST_ERROR. "\n";
-		     }
-		     */
+                     if ( $srcElem["CNT"] > 0 ) {
+			     print "   Try update=". $arPath. "/".  $arFields["ID"] . " CNT=" .$srcElem["CNT"] . "\n";
+			     /*
+			     $arUpd["ACTIVE"] = 'Y' ;
+			     $res = $bs->Update($arFields["ID"], $arUpd);
+			     if ($res) {
+				print "UPDATED!\n";
+			     } else {
+				print "ERROR:".$bs->LAST_ERROR. "\n";
+			     }
+			     */
+                     } else {
+                             print "Skip empty group". $arPath ."\n";
+                     } 
 		 }
 	       }
 	   }
